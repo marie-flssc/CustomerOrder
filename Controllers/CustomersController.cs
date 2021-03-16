@@ -32,15 +32,16 @@ namespace Orders.Controllers
         [HttpGet("{id}")]
         public ActionResult<CustomerDTO> GetCustomers_byId(int id)
         {
-            DbSet<Order> ords =  _context.Orders;
+            var ords =  _context.Orders;
+            List<Order> car = ords.Where(x => x.customer_Id == id).ToList();
+            
             var cust = from customers in _context.Customers
-            join order in _context.Orders on customers.id equals order.customer_Id
             select new CustomerDTO
             {
-                Id = id,
+                Id = customers.id,
                 Name =customers.name,
                 Number_orders = customers.number_orders,
-                Cart = ords.Where(x => x.customer_Id == id).ToList()
+                Cart = car
                 
             };
             var current_cust = cust.ToList().Find(x => x.Id == id);
