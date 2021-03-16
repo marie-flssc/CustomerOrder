@@ -62,7 +62,7 @@ namespace Orders.Controllers
         }*/
 
         [HttpPost]
-        public async Task<ActionResult> AddCustomer(CustomerDTO custDTO)
+        public async Task<ActionResult> AddCustomer(NewCustomer customer)
         {
              if (!ModelState.IsValid)
              {
@@ -71,13 +71,13 @@ namespace Orders.Controllers
 
              var cust = new Customers()
              {
-                 number_orders = custDTO.Number_orders,
-                 name = custDTO.Name
+                number_orders = customer.Number_orders,
+                name = customer.Name
              };
              await _context.Customers.AddAsync(cust);
              await _context.SaveChangesAsync();
 
-             return CreatedAtAction("GetCustomer", new { id = cust.id }, custDTO);
+             return CreatedAtAction("GetCustomer", new { id = cust.id }, customer);
          }
     }
 }
