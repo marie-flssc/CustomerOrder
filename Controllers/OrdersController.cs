@@ -42,32 +42,26 @@ namespace Orders.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddCustomer(OrderDTO orderdto)
+        public async Task<ActionResult> AddOrder(OrderDTO ord)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-            var ord = new Order()
+            var values = await _context.Customers.FindAsync(ord.Customer_Id);
+            if(values == null)
             {
-                customer_Id = orderdto.Customer_Id,
-                product_Id = orderdto.Product_Id,
-                quantity = orderdto.Quantity
-            };
-            await _context.Orders.AddAsync(ord);
+                return NotFound();
+            }
+            var cust = await _context.Customers.SingleOrDefaultAsync(x => x.id == ord.Customer_Id);
+            cust.number_orders +=1;
             await _context.SaveChangesAsync();
-            /*
-            var cust = from customers in _context.Customers
-            join order in _context.Orders on customers.id equals order.customer_Id
-            select new CustomerDTO
-            {
-                Id =
+            Order order= new Order{
+                customer_Id = ord.Customer_Id,
+                product_Id = ord.Product_Id,
+                quantity = ord.Quantity
             };
-            Books = book.Where(x => x.Book_id == library.Book_id).ToList()
-            await _context.Orders.AddAsync(ord);
-            await _context.SaveChangesAsync();*/
-            return CreatedAtAction("GetCustomer", new { id = ord.id }, orderdto);
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetOrders", new { id = order.id }, order);
         }
     }
 }

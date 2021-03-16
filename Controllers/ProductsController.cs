@@ -44,7 +44,7 @@ namespace Orders.Controllers
             await _context.Products.AddAsync(roduct);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCustomer", new { id = roduct.id }, prod);
+            return CreatedAtAction("GetProducts", new { id = roduct.id }, prod);
         }
     }
 }
