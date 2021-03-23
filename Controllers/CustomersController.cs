@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Orders.Data;
 using Orders.DTO;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Orders.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class CustomersController : ControllerBase
